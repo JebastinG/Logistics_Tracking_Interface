@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logistics Tracking - Sign Up</title>
+</head>
+<body bgcolor="#e8f0fe" text="#333" link="#0066cc" alink="#004499" vlink="#003366">
+    <center>
+        <h1 style="font-family: Arial, sans-serif; color: #174b88;">LOGISTICS TRACKING SYSTEM</h1>
+        <p style="font-size: 1.1em; font-family: Verdana, sans-serif; max-width: 600px; color: #555;">
+            Create your account to start tracking and managing your shipments!
+        </p>
+
+        <fieldset style="border: 2px solid #174b88; border-radius: 10px; width: 450px; padding: 30px; background-color: #ffffff; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <legend style="font-weight: bold; font-size: 1.4em; color: #004080; padding: 0 10px;">Sign Up</legend>
+            <form id="signupForm" method="post">
+                <table cellpadding="10" cellspacing="0" border="0" style="font-family: Verdana, sans-serif; width: 100%;">
+                    <tr>
+                        <td width="35%"><label for="username"><b>Username:</b></label></td>
+                        <td width="65%"><input type="text" id="username" name="username" size="30" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%;"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="email"><b>Email Address:</b></label></td>
+                        <td><input type="email" id="email" name="email" size="30" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%;"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="phone"><b>Mobile Number (IN):</b></label></td>
+                        <td>
+                            <input type="tel" id="phone" name="phone" size="30" maxlength="10" style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%;" placeholder="10-digit Mobile (e.g., 9876543210)">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="password"><b>Password:</b></label></td>
+                        <td><input type="password" id="password" name="password" size="30" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%;"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="confirm_password"><b>Confirm Password:</b></label></td>
+                        <td><input type="password" id="confirm_password" name="confirm_password" size="30" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%;"></td>
+                    </tr>
+                    <tr>
+                        <td><label for="account_type"><b>Account Type:</b></label></td>
+                        <td>
+                            <select id="account_type" name="account_type" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%;">
+                                <option value="" disabled selected>Select an option</option>
+                                <option value="Shipper">Shipper (Individual)</option>
+                                <option value="Business">Business Client</option>
+                                <option value="Carrier">Carrier/Driver</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <input type="checkbox" id="terms" name="terms" required><label for="terms" style="font-size: 0.9em;"> I agree to the <a href="#" style="color: #0066cc;">Terms of Service</a></label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                           <button type="button" style="font-weight: bold; font-size: 1.1em; padding: 10px 30px; cursor: pointer; background-color: #174b88; color: white; border: none; border-radius: 5px; margin-top: 15px;" onclick="validateForm()">Creat Account</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <p style="font-family: Verdana, sans-serif; font-size: 0.9em; margin-top: 15px;">
+                Already have an account? <a href="Singn_in.html" onclick="alert('Redirecting to Sign In page...')" style="font-weight: bold; color: #174b88;">Sign In here!</a>
+            </p>
+        </fieldset>
+
+        <h2 style="font-family: Arial, sans-serif; color: #004080; margin-top: 40px;">Need Assistance?</h2>
+        <p style="font-family: Verdana, sans-serif; max-width: 600px;">
+            For support regarding your account, please contact our team at <a href="mailto:support@logisticstracking.com">support@logisticstracking.com</a>.
+        </p>
+    </center>
+
+    <script>
+function validateForm() {
+    const password = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirm_password').value;
+    const accountType = document.getElementById('account_type').value;
+    const phoneNumber = document.getElementById('phone').value.trim();
+
+    // Password Match Validation
+    if (password !== confirmPassword) {
+        alert("Error: Passwords do not match!");
+        return;
+    }
+
+    // Simple Password Length Check
+    if (password.length < 6) {
+        alert("Error: Password must be at least 6 characters long.");
+        return;
+    }
+
+    // Account Type Check
+    if (accountType === "") {
+        alert("Error: Please select an Account Type.");
+        return;
+    }
+
+    // Indian Phone Number Validation
+    if (phoneNumber) {
+        const indianPhoneRegex = /^[6-9]\d{9}$/;
+        if (!indianPhoneRegex.test(phoneNumber)) {
+            alert("Warning: Enter a valid Indian mobile number (10 digits, starts with 6/7/8/9)");
+            return;
+        }
+    }
+
+    // Terms & Conditions Validation
+    if (!document.getElementById("terms").checked) {
+        alert("Please accept the Terms and Conditions.");
+        return;
+    }
+
+    // Success
+    alert("Sign Up Successful!");
+    window.location.href = "Shipment_status_tracker.html";
+}
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Logistics Tracking - Password Reset</title>
+</head>
+<body bgcolor="#e8f0fe" text="#333" link="#0066cc" alink="#004499" vlink="#003366">
+
+    <center>
+        <h1 style="font-family: Arial, sans-serif; color: #174b88;">LOGISTICS TRACKING SYSTEMS</h1>
+        <p style="font-size: 1.1em; font-family: Verdana, sans-serif; max-width: 600px; color: #555;">
+            Enter your account identifier below to receive instructions for resetting your password.
+        </p>
+
+        <fieldset style="border: 2px solid #174b88; border-radius: 10px; width: 450px; padding: 30px; background-color: #ffffff; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <legend style="font-weight: bold; font-size: 1.4em; color: #004080; padding: 0 10px;">Reset Password</legend>
+            <form id="resetForm" onsubmit="return validateReset()">
+                <table cellpadding="10" cellspacing="0" border="0" style="font-family: Verdana, sans-serif; width: 100%;">
+                    <tr>
+                        <td width="35%"><label for="reset_identifier"><b>Username or Email:</b></label></td>
+                        <td width="65%"><input type="text" id="reset_identifier" name="reset_identifier" size="30" required style="padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%;" placeholder="Enter your registered email or username"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center" style="font-size: 0.9em; padding-bottom: 20px;">
+                            We will send a password reset link to the email associated with this account.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" align="center">
+                            <input type="submit" value="Send Reset Link" style="font-weight: bold; font-size: 1.1em; padding: 10px 30px; cursor: pointer; background-color: #ff6600; color: white; border: none; border-radius: 5px; margin-top: 5px;">
+                        </td>
+                    </tr>
+                </table>
+            </form>
+            <p style="font-family: Verdana, sans-serif; font-size: 0.9em; margin-top: 15px;">
+                Remembered your password? <a href="Singn_in.html" onclick="alert('Redirecting to Sign In page...')" style="font-weight: bold; color: #174b88;">Sign In</a>
+            </p>
+        </fieldset>
+
+        <h2 style="font-family: Arial, sans-serif; color: #004080; margin-top: 40px;">Need Assistance?</h2>
+        <p style="font-family: Verdana, sans-serif; max-width: 600px;">
+            For support, please contact our team at <a href="mailto:support@logisticstracking.com">support@logisticstracking.com</a>.
+        </p>
+    </center>
+
+    <script>
+        function validateReset() {
+            const identifier = document.getElementById('reset_identifier').value.trim();
+
+            if (identifier === "") {
+                alert("Error: Please enter your Username or Email Address.");
+                return false;
+            }
+            // In a real application, this triggers an API call to send a reset email.
+            alert("If the account exists, a password reset link has been sent to the associated email address.");
+            // For demonstration, we prevent submission. Change to return true to allow form submission.
+            return false; 
+        }
+    </script>
+
+</body>
+</html>
