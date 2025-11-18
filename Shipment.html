@@ -8,114 +8,87 @@
     body {
         margin: 0;
         padding: 0;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
         font-family: Arial, Helvetica, sans-serif;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         color: #2c3e50;
     }
-    .container { max-width: 1300px; margin: auto; padding: 20px; }
-    .header { background: white; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0px 4px 20px rgba(0,0,0,0.1); text-align: center; }
-    .header h1 { margin: 0; font-size: 2rem; }
-    .search-container { margin-top: 20px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
-    .search-input, select { padding: 10px; width: 260px; border-radius:8px; border:1px solid #ccc; font-size:1rem; }
-    .search-btn { padding: 10px 16px; background:#3498db; color:white; border:none; border-radius:8px; cursor:pointer; font-size:1rem; }
-    .main-content { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
-    .shipments-panel, .map-container, .stat-card { background:white; padding:20px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.1); }
-    .panel-title { font-size:1.2rem; margin-bottom:12px; }
-    .shipment-card { padding:12px; border-radius:10px; margin-bottom:10px; background:#f9f9f9; border-left:4px solid #3498db; cursor:pointer; }
-    .shipment-card.selected { background:#fff3f3; border-left-color:red; }
-    .shipment-header { display:flex; justify-content:space-between; align-items:center; }
-    .status-badge { padding:5px 10px; border-radius:12px; color:white; font-size:0.8rem; }
-    .status-in-transit { background:#f1c40f; }
-    .status-delivered { background:#2ecc71; }
-    .status-pending { background:#e74c3c; }
-    .google-map { width:100%; height:360px; border-radius:12px; border:0; }
-    .route-stats { margin-top:12px; display:flex; justify-content:space-between; text-align:center; gap:8px; flex-wrap:wrap; }
-    .route-stats > div { flex:1; min-width:100px; background:#fff; border-radius:8px; padding:8px; box-shadow:0 1px 6px rgba(0,0,0,0.06); }
-    .add-tracking-box { margin-top:16px; padding:14px; background:#f8f8f8; border-radius:12px; border-left:4px solid #764ba2; display:flex; flex-direction:column; gap:8px; }
-    .small-input { width:48%; }
-    .add-row { display:flex; gap:8px; flex-wrap:wrap; }
-    @media(max-width:900px) { .main-content { grid-template-columns:1fr; } .search-input, select { width: 100%; } .small-input { width:100%; } }
+    .container {
+        max-width: 1300px; margin: auto; padding: 20px; 
+    }
+    .header { 
+        background: white; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0px 4px 20px rgba(0,0,0,0.1); text-align: center;
+    }
+    .header h1 { 
+        margin: 0; font-size: 2rem; 
+    }
+    .search-container { 
+        margin-top: 20px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; 
+    }
+    .search-input, select {
+        padding: 10px; width: 260px; border-radius:8px; border:1px solid #ccc; font-size:1rem;
+    }
+    .search-btn {
+        padding: 10px 16px; background:#3498db; color:white; border:none; border-radius:8px; cursor:pointer; font-size:1rem; 
+    }
+    .main-content { 
+        display:grid; grid-template-columns:1fr 1fr; gap:20px;
+    }
+    .shipments-panel, .map-container, .stat-card {
+        background:white; padding:20px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.1);
+    }
+    .panel-title { 
+        font-size:1.2rem; margin-bottom:12px; 
+    }
+    .shipment-card { 
+        padding:12px; border-radius:10px; margin-bottom:10px; background:#f9f9f9; border-left:4px solid #3498db; cursor:pointer;
+    }
+    .shipment-card.selected { 
+        background:#fff3f3; border-left-color:red;
+    }
+    .shipment-header { 
+        display:flex; justify-content:space-between; align-items:center;
+    }
+    .status-badge { 
+        padding:5px 10px; border-radius:12px; color:white; font-size:0.8rem; 
+    }
+    .status-in-transit { 
+        background:#f1c40f; 
+    }
+    .status-delivered {
+        background:#2ecc71;
+    }
+    .status-pending {
+        background:#e74c3c;
+    }
+    .google-map {
+        width:100%; height:360px; border-radius:12px; border:0;
+    }
+    .route-stats { 
+        margin-top:12px; display:flex; justify-content:space-between; text-align:center; gap:8px; flex-wrap:wrap; 
+    }
+    .route-stats > div {
+        flex:1; min-width:100px; background:#fff; border-radius:8px; padding:8px; box-shadow:0 1px 6px rgba(0,0,0,0.06); 
+    }
+    .add-tracking-box { 
+        margin-top:16px; padding:14px; background:#f8f8f8; border-radius:12px; border-left:4px solid #764ba2; display:flex; flex-direction:column; gap:8px;
+    }
+    .small-input { 
+        width:48%; 
+    }
+    .add-row {
+        display:flex; gap:8px; flex-wrap:wrap; 
+    }
+    @media(max-width:900px) {
+        .main-content { 
+            grid-template-columns:1fr; 
+        }
+        .search-input, select { 
+            width: 100%; 
+        } 
+        .small-input { 
+            width:100%; 
+        } 
+    }
 </style>
 </head>
 <body>
@@ -378,3 +351,4 @@ updateMapAndStats();
 </script>
 </body>
 </html>
+
