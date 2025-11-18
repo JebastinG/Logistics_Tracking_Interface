@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Logistics Tracking Interface — Tamil Nadu</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: #2c3e50;
+    }
+    .container { max-width: 1300px; margin: auto; padding: 20px; }
+    .header { background: white; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0px 4px 20px rgba(0,0,0,0.1); text-align: center; }
+    .header h1 { margin: 0; font-size: 2rem; }
+    .search-container { margin-top: 20px; display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+    .search-input, select { padding: 10px; width: 260px; border-radius:8px; border:1px solid #ccc; font-size:1rem; }
+    .search-btn { padding: 10px 16px; background:#3498db; color:white; border:none; border-radius:8px; cursor:pointer; font-size:1rem; }
+    .main-content { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+    .shipments-panel, .map-container, .stat-card { background:white; padding:20px; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.1); }
+    .panel-title { font-size:1.2rem; margin-bottom:12px; }
+    .shipment-card { padding:12px; border-radius:10px; margin-bottom:10px; background:#f9f9f9; border-left:4px solid #3498db; cursor:pointer; }
+    .shipment-card.selected { background:#fff3f3; border-left-color:red; }
+    .shipment-header { display:flex; justify-content:space-between; align-items:center; }
+    .status-badge { padding:5px 10px; border-radius:12px; color:white; font-size:0.8rem; }
+    .status-in-transit { background:#f1c40f; }
+    .status-delivered { background:#2ecc71; }
+    .status-pending { background:#e74c3c; }
+    .google-map { width:100%; height:360px; border-radius:12px; border:0; }
+    .route-stats { margin-top:12px; display:flex; justify-content:space-between; text-align:center; gap:8px; flex-wrap:wrap; }
+    .route-stats > div { flex:1; min-width:100px; background:#fff; border-radius:8px; padding:8px; box-shadow:0 1px 6px rgba(0,0,0,0.06); }
+    .add-tracking-box { margin-top:16px; padding:14px; background:#f8f8f8; border-radius:12px; border-left:4px solid #764ba2; display:flex; flex-direction:column; gap:8px; }
+    .small-input { width:48%; }
+    .add-row { display:flex; gap:8px; flex-wrap:wrap; }
+    @media(max-width:900px) { .main-content { grid-template-columns:1fr; } .search-input, select { width: 100%; } .small-input { width:100%; } }
+</style>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <h1>Logistics Tracking Interface</h1>
+        <p>Real-Time Shipment Monitoring & Route Tracking (Tamil Nadu)</p>
+        <div class="search-container">
+            <input id="tracking-search" class="search-input" placeholder="Enter Tracking Number (e.g. TRK001)">
+            <button class="search-btn" onclick="searchShipment()">Track</button>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <!-- LEFT: Shipments -->
+        <section class="shipments-panel">
+            <h2 class="panel-title">Active Shipments</h2>
+            <div id="shipments-list"></div>
+
+            <div class="add-tracking-box">
+                <h3>Add New Shipment</h3>
+
+                <div class="add-row">
+                    <input id="new-id" class="search-input small-input" placeholder="Tracking ID (e.g. TRK013)">
+                    <input id="new-product" class="search-input small-input" placeholder="Product Name">
+                </div>
+
+                <div class="add-row">
+                    <select id="new-origin"></select>
+                    <select id="new-destination"></select>
+                </div>
+
+                <div style="display:flex; gap:8px; margin-top:6px;">
+                    <button class="search-btn" onclick="addShipment()">Add Shipment</button>
+                </div>
+
+                <small>Tip: Use the dropdowns to pick origin & destination (Tamil Nadu districts).</small>
+            </div>
+        </section>
+
+        <!-- RIGHT: Map -->
+        <section class="map-container">
+            <h2 class="panel-title">Live Location Map</h2>
+            <iframe id="map-frame" class="google-map" loading="lazy" allowfullscreen></iframe>
+
+            <div class="route-stats" style="margin-top:12px;">
+                <div><strong id="distance-remaining">0 km</strong><br>Remaining</div>
+                <div><strong id="eta-time">--</strong><br>ETA</div>
+                <div><strong id="current-speed">0 km/h</strong><br>Speed</div>
+                <div><strong id="countdown-timer">--:--:--</strong><br>Countdown</div>
+            </div>
+        </section>
+
+    </main>
+
+    <section style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:18px;">
+        <div class="stat-card"><div style="font-size:1.6rem;" id="total-shipments">0</div><small>Total</small></div>
+        <div class="stat-card"><div style="font-size:1.6rem;" id="delivered-count">0</div><small>Delivered</small></div>
+        <div class="stat-card"><div style="font-size:1.6rem;" id="in-transit-count">0</div><small>In Transit</small></div>
+        <div class="stat-card"><div style="font-size:1.6rem;" id="pending-count">0</div><small>Pending</small></div>
+    </section>
+</div>
+
+<script>
+/* -----------------------
+   Full list of 38 TN districts
+   ----------------------- */
+const tamilNaduDistricts = [
+  "Ariyalur","Chengalpattu","Chennai","Coimbatore","Cuddalore","Dharmapuri","Dindigul",
+  "Erode","Kallakurichi","Kanchipuram","Kanniyakumari","Karur","Krishnagiri","Madurai",
+  "Mayiladuthurai","Nagapattinam","Namakkal","Nilgiris","Perambalur","Pudukkottai",
+  "Ramanathapuram","Ranipet","Salem","Sivaganga","Tenkasi","Thanjavur","Theni",
+  "Thoothukudi","Tirupattur","Tiruchirappalli","Tirunelveli","Tiruppur","Tiruvallur",
+  "Tiruvannamalai","Tiruvarur","Vellore","Villupuram","Virudhunagar"
+];
+
+/* Populate origin/destination dropdowns */
+const originSelect = document.getElementById('new-origin');
+const destSelect = document.getElementById('new-destination');
+function populateDistricts() {
+    tamilNaduDistricts.forEach(d => {
+        const o = document.createElement('option');
+        o.value = d; o.textContent = d;
+        originSelect.appendChild(o);
+        const p = o.cloneNode(true);
+        destSelect.appendChild(p);
+    });
+}
+populateDistricts();
+
+/* -----------------------
+   Shipments (12 total)
+   ----------------------- */
+const shipments = [
+  { id:"TRK001", product:"Mobile Phone", status:"in-transit", origin:"Chennai", destination:"Coimbatore", currentLocation:"Vellore", progress:68, distance:245, speed:65, deliveryTime: Date.now() + 1000*60*60*2 },
+  { id:"TRK002", product:"Laptop", status:"delivered", origin:"Madurai", destination:"Salem", currentLocation:"Salem", progress:100, distance:0, speed:0, deliveryTime: Date.now() - 1000*60*60 },
+  // 10 additional:
+  { id:"TRK003", product:"Refrigerator", status:"in-transit", origin:"Tiruchirappalli", destination:"Thanjavur", currentLocation:"Thanjavur", progress:80, distance:60, speed:40, deliveryTime: Date.now() + 1000*60*60*1 },
+  { id:"TRK004", product:"Washing Machine", status:"pending", origin:"Coimbatore", destination:"Tiruppur", currentLocation:"Coimbatore", progress:10, distance:55, speed:0, deliveryTime: Date.now() + 1000*60*60*36 },
+  { id:"TRK005", product:"Air Conditioner", status:"in-transit", origin:"Salem", destination:"Erode", currentLocation:"Salem", progress:40, distance:70, speed:50, deliveryTime: Date.now() + 1000*60*60*5 },
+  { id:"TRK006", product:"Television", status:"in-transit", origin:"Madurai", destination:"Dindigul", currentLocation:"Dindigul", progress:60, distance:80, speed:50, deliveryTime: Date.now() + 1000*60*60*8 },
+  { id:"TRK007", product:"Books (Consignment)", status:"pending", origin:"Nagapattinam", destination:"Thiruvarur", currentLocation:"Nagapattinam", progress:0, distance:25, speed:0, deliveryTime: Date.now() + 1000*60*60*48 },
+  { id:"TRK008", product:"Spare Parts", status:"in-transit", origin:"Tirunelveli", destination:"Thoothukudi", currentLocation:"Thoothukudi", progress:90, distance:15, speed:35, deliveryTime: Date.now() + 1000*60*30 },
+  { id:"TRK009", product:"Pharmaceuticals", status:"in-transit", origin:"Vellore", destination:"Chennai", currentLocation:"Tiruvallur", progress:50, distance:120, speed:60, deliveryTime: Date.now() + 1000*60*60*4 },
+  { id:"TRK010", product:"Furniture", status:"pending", origin:"Theni", destination:"Madurai", currentLocation:"Theni", progress:5, distance:70, speed:0, deliveryTime: Date.now() + 1000*60*60*72 },
+  { id:"TRK011", product:"Groceries", status:"in-transit", origin:"Kanyakumari", destination:"Nagercoil", currentLocation:"Nagercoil", progress:85, distance:12, speed:30, deliveryTime: Date.now() + 1000*60*20 },
+  { id:"TRK012", product:"Industrial Tools", status:"in-transit", origin:"Tiruppur", destination:"Coimbatore", currentLocation:"Avinashi", progress:35, distance:50, speed:50, deliveryTime: Date.now() + 1000*60*60*6 }
+];
+
+/* Selected shipment & timer handling */
+let selectedShipment = shipments[0];
+let countdownInterval = null;
+
+/* Render shipments list */
+function renderShipments() {
+    const list = document.getElementById('shipments-list');
+    list.innerHTML = '';
+    shipments.forEach(s => {
+        const card = document.createElement('div');
+        card.className = 'shipment-card' + (s.id === selectedShipment.id ? ' selected' : '');
+        const statusClass = s.status === 'delivered' ? 'status-delivered' : (s.status === 'in-transit' ? 'status-in-transit' : 'status-pending');
+        card.innerHTML = `
+            <div class="shipment-header">
+                <div>
+                    <strong>${s.id}</strong> &nbsp; <small style="color:#666">${s.product}</small>
+                </div>
+                <div><span class="status-badge ${statusClass}">${s.status.replace('-', ' ').toUpperCase()}</span></div>
+            </div>
+            <div style="margin-top:6px; font-size:0.95rem;">
+                <b>From:</b> ${s.origin} &nbsp; <b>To:</b> ${s.destination}<br>
+                <b>Location:</b> ${s.currentLocation} &nbsp; <b>Progress:</b> ${s.progress}%
+            </div>
+        `;
+        card.onclick = () => selectShipment(s.id);
+        list.appendChild(card);
+    });
+    updateStats();
+}
+
+/* Select shipment by id */
+function selectShipment(id) {
+    const s = shipments.find(x => x.id === id);
+    if (!s) return;
+    selectedShipment = s;
+    renderShipments();
+    updateMapAndStats();
+}
+
+/* Update map + stats display */
+function updateMapAndStats() {
+    const mapFrame = document.getElementById('map-frame');
+    // Query map for the current location and Tamil Nadu context
+    const loc = encodeURIComponent(selectedShipment.currentLocation + ', Tamil Nadu, India');
+    mapFrame.src = `https://www.google.com/maps?q=${loc}&output=embed`;
+
+    document.getElementById('distance-remaining').textContent = `${selectedShipment.distance} km`;
+    document.getElementById('current-speed').textContent = `${selectedShipment.speed} km/h`;
+    document.getElementById('eta-time').textContent = selectedShipment.status === 'delivered' ? 'Delivered' : 'ETA: Approx.';
+
+    startCountdownForSelected();
+}
+
+/* Countdown timer (ensures only one interval runs) */
+function startCountdownForSelected() {
+    // Clear any prior interval
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+        countdownInterval = null;
+    }
+
+    const timerEl = document.getElementById('countdown-timer');
+
+    function updateTimer() {
+        const now = Date.now();
+        let diff = selectedShipment.deliveryTime - now;
+
+        if (selectedShipment.status === 'delivered' || diff <= 0) {
+            timerEl.textContent = 'Delivered';
+            clearInterval(countdownInterval);
+            countdownInterval = null;
+            return;
+        }
+        const days = Math.floor(diff / (1000*60*60*24));
+        diff -= days * (1000*60*60*24);
+        const hours = Math.floor(diff / (1000*60*60));
+        diff -= hours * (1000*60*60);
+        const mins = Math.floor(diff / (1000*60));
+        diff -= mins * (1000*60);
+        const secs = Math.floor(diff / 1000);
+
+        const parts = [];
+        if (days) parts.push(days + 'd');
+        parts.push(String(hours).padStart(2,'0') + 'h');
+        parts.push(String(mins).padStart(2,'0') + 'm');
+        parts.push(String(secs).padStart(2,'0') + 's');
+
+        timerEl.textContent = parts.join(' ');
+    }
+
+    updateTimer();
+    countdownInterval = setInterval(updateTimer, 1000);
+}
+
+/* Search by tracking ID */
+function searchShipment() {
+    const q = document.getElementById('tracking-search').value.trim().toUpperCase();
+    if (!q) { alert('Enter a tracking ID to search.'); return; }
+    const found = shipments.find(s => s.id === q);
+    if (!found) { alert('Shipment not found.'); return; }
+    selectShipment(found.id);
+}
+
+/* Add a single shipment from form */
+function addShipment() {
+    const id = document.getElementById('new-id').value.trim().toUpperCase();
+    const product = document.getElementById('new-product').value.trim();
+    const origin = document.getElementById('new-origin').value;
+    const destination = document.getElementById('new-destination').value;
+
+    if (!id || !product || !origin || !destination) {
+        alert('Please fill all fields (ID, Product, Origin, Destination).');
+        return;
+    }
+    if (shipments.some(s => s.id === id)) {
+        alert('A shipment with this ID already exists.');
+        return;
+    }
+
+    const newShipment = {
+        id,
+        product,
+        status: 'pending',
+        origin,
+        destination,
+        currentLocation: origin,
+        progress: 0,
+        distance: Math.floor(Math.random()*200)+10,
+        speed: 0,
+        deliveryTime: Date.now() + 1000*60*60*(Math.floor(Math.random()*72)+4) // 4 to 76 hours
+    };
+    shipments.unshift(newShipment); // add to top
+    selectShipment(newShipment.id);
+    renderShipments();
+    alert('Shipment added: ' + id);
+}
+
+/* Update stats */
+function updateStats() {
+    document.getElementById('total-shipments').textContent = shipments.length;
+    document.getElementById('delivered-count').textContent = shipments.filter(s => s.status==='delivered').length;
+    document.getElementById('in-transit-count').textContent = shipments.filter(s => s.status==='in-transit').length;
+    document.getElementById('pending-count').textContent = shipments.filter(s => s.status==='pending').length;
+}
+
+/* Initial render */
+renderShipments();
+updateMapAndStats();
+
+</script>
+</body>
+</html>
